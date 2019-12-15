@@ -12,7 +12,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 
 
 youtuber = "https://www.youtube.com/user/havefun123for/videos"
-vidtitle = "RedBull Ad With Subtitle"
+oldVidUrl = "BVedu0aBNxE"
 
 #Log in to Google Account
 
@@ -40,16 +40,25 @@ while True:
     driver.get(youtuber)
     
     
-    timeout = 1
+    timeout = 2
     try:
         element_present = EC.presence_of_element_located((By.ID, 'tabsContainer'))
         WebDriverWait(driver, timeout).until(element_present)
         driver.find_element_by_id("video-title").click()
     except TimeoutException:
-        print("Timed out waiting for page to load")
+        print("Timed out waiting videos to load. Retrying...")
     finally:
         print("Page loaded")
-        if vidtitle != driver.title: break
+        timeout = 1
+        try:
+            element_present = EC.presence_of_element_located((By.ID, 'tabsContainer'))
+            WebDriverWait(driver, timeout).until(element_present)
+        except TimeoutException:
+            print("Timed out waiting to find date")
+            continue
+        finally:
+            if oldVidUrl not in driver.current_url: break
+
 
 print("Success!")
 

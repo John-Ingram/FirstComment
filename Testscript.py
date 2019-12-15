@@ -7,12 +7,13 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support.ui import WebDriverWait
+import time
 
 
 
 
 youtuber = "https://www.youtube.com/user/havefun123for/videos"
-vidtitle = "RedBull Ad With Subtitle"
+oldVidDate = "Jun 29, 2019"
 
 #Log in to Google Account
 
@@ -33,24 +34,18 @@ driver.find_element_by_id("passwordNext").click()
 driver.get(youtuber)
 driver.find_element_by_id("video-title").click()
 #Set up base page info
+print(driver.title)
 
+timeout = 2
+try:
+    element_present = EC.presence_of_element_located((By.ID, 'subscribe-button'))
+    WebDriverWait(driver, timeout).until(element_present)
+except TimeoutException:
+    print("Timed out waiting for page to load")
+finally:
+    print("Page loaded")
+    time.sleep(0.5)
+    print("Jun 29, 2019" in driver.page_source)
 
-while True:
-
-    driver.get(youtuber)
-    
-    
-    timeout = 1
-    try:
-        element_present = EC.presence_of_element_located((By.ID, 'tabsContainer'))
-        WebDriverWait(driver, timeout).until(element_present)
-        driver.find_element_by_id("video-title").click()
-    except TimeoutException:
-        print("Timed out waiting for page to load")
-    finally:
-        print("Page loaded")
-        if vidtitle != driver.title: break
-
-print("Success!")
 
 
